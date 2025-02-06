@@ -2,9 +2,9 @@ package com.example.issLocation.controller;
 
 import com.example.issLocation.apiResponse.Response;
 import com.example.issLocation.service.LocationService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +18,12 @@ public class LocationController {
     }
 
     @GetMapping("/iss")
-    public Map<String, Double> getISSLocation() {
+    public Map<String, Double> getISSLocation(HttpSession session) {
         Response response = locationService.getIssLocation();
+        if (session != null) {
+            System.out.println("Session ID: " + session.getId());  // Log session ID to verify
+        }
+
 
         double latitude = Double.parseDouble(response.getLatitude().toString());
         double longitude = Double.parseDouble(response.getLongitude().toString());

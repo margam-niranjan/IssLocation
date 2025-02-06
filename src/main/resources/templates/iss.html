@@ -6,12 +6,14 @@
     <title>Live ISS Tracker</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <style>
-        #map { height: 600px; width: 100%; }
+        #map { height: 800px; width: 100%; }
+        #info{position:absolute;
+        left:10px;}
     </style>
 </head>
 <body>
 <div id="map"></div>
-
+<div id="info">lat</div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
     // Initialize the map centered at (0, 0)
@@ -58,7 +60,7 @@
 
     // Fetch location immediately on page load
     fetchISSLocation();
-    setInterval(fetchISSLocation, 5000);  // Update every 5 seconds
+    setInterval(fetchISSLocation, 3000);  // Update every 5 seconds
 </script>
 </body>
 </html>
