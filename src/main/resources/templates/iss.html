@@ -6,10 +6,63 @@
     <title>Live ISS Tracker</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <style>
-        #map { height: 800px; width: 100%;  }
+        /* General reset for margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* Map container styling */
+        #map {
+            width: 100%;  /* Full width */
+            height: 100vh;  /* Full screen height */
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 1200px) {
+            #map {
+                height: 75vh; /* Adjust map height for medium screens */
+            }
+        }
+
+        @media (max-width: 1024px) {
+            #map {
+                height: 70vh; /* Slightly smaller height for tablets */
+            }
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 60vh; /* Reduce map height for small tablets */
+            }
+        }
+
+        @media (max-width: 600px) {
+            #map {
+                height: 55vh; /* Reduce map height for mobile devices */
+            }
+        }
+
+        @media (max-width: 480px) {
+            #map {
+                height: 50vh; /* Further reduce map height for small phones */
+            }
+        }
+
+        /* Optional: Add styling for the title */
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 2px -2px gray;
+        }
     </style>
 </head>
 <body>
+<h1>Live ISS Tracker</h1>
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
@@ -57,7 +110,7 @@
 
     // Fetch location immediately on page load
     fetchISSLocation();
-    setInterval(fetchISSLocation, 3000);  // Update every 5 seconds
+    setInterval(fetchISSLocation, 3000);  // Update every 3 seconds
 </script>
 </body>
 </html>
