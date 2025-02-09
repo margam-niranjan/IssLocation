@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Info</title>
+  <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: left;
+    }
+  </style>
+</head>
+<body>
+<h1>Active Users (Total: <span th:text="${users != null ? users.size() : 0}"></span>)</h1>
+
+<table>
+  <tr>
+    <th>IP Address</th>
+    <th>Hostname</th>
+    <th>Browser Info</th>
+    <th>Session ID</th>
+    <th>Device Name</th>
+  </tr>
+
+  <!-- Only loop if users is not empty -->
+  <tr th:each="user : ${users}" th:if="${users != null and not users.isEmpty()}">
+    <td th:text="${user.ipAddress} ?: 'N/A'"></td>
+    <td th:text="${user.hostname} ?: 'N/A'"></td>
+    <td th:text="${user.browserInfo} ?: 'N/A'"></td>
+    <td th:text="${user.sessionId} ?: 'N/A'"></td>
+    <td th:text="${user.deviceName} ?: 'N/A'"></td>
+  </tr>
+
+  <!-- Fallback for when no users are present -->
+  <tr th:if="${users == null or users.isEmpty()}">
+    <td colspan="5" style="text-align:center;">No active users</td>
+  </tr>
+</table>
+
+</body>
+</html>

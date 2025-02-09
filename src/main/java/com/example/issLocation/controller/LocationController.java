@@ -1,37 +1,49 @@
 package com.example.issLocation.controller;
 
-import com.example.issLocation.apiResponse.Response;
 import com.example.issLocation.service.LocationService;
+import com.example.issLocation.service.UserTrackingService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Controller
 public class LocationController {
     private final LocationService locationService;
+    private final UserTrackingService userTrackingService;
 
-    public LocationController(LocationService locationService) {
+    public LocationController(LocationService locationService, UserTrackingService userTrackingService) {
         this.locationService = locationService;
+        this.userTrackingService = userTrackingService;
     }
 
     @GetMapping("/iss")
-    public Map<String, Double> getISSLocation(HttpSession session) {
-        Response response = locationService.getIssLocation();
-        if (session != null) {
-            System.out.println("Session ID: " + session.getId());  // Log session ID to verify
+    public String getISSLocation(HttpServletRequest request, HttpSession session, Model model) {
+        var response = locationService.getIssLocation();
+
+        // Store latitude & longitude in Model for Thymeleaf
+        model.addAttribute("latitude", response.getLatitude());
+        model.addAttribute("longitude", response.getLongitude());
+
+        // Track user
+        String ipAddress = request.getRemoteAddr();
+        String hostname;
+        String deviceName = "Unknown";
+
+        try {
+            InetAddress inetAddress = InetAddress.getByName(ipAddress);
+            hostname = inetAddress.getHostName();
+            deviceName = hostname.contains(".") ? hostname.split("\\.")[0] : hostname;
+        } catch (UnknownHostException e) {
+            hostname = "Unknown";
         }
 
+        userTrackingService.trackUser(request, session, deviceName, request.getHeader("User-Agent"));
 
-        double latitude = Double.parseDouble(response.getLatitude().toString());
-        double longitude = Double.parseDouble(response.getLongitude().toString());
-
-        Map<String, Double> location = new HashMap<>();
-        location.put("latitude", latitude);
-        location.put("longitude", longitude);
-
-        return location;
+        return "iss";
     }
 }
