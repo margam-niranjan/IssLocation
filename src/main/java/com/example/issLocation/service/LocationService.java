@@ -14,8 +14,25 @@ public class LocationService {
         this.restTemplate = restTemplate;
     }
 
-    public Response getIssLocation(){
+    public Response getIssLocation() {
         String apiUrl = "https://api.wheretheiss.at/v1/satellites/25544";
-        return restTemplate.getForObject(apiUrl, Response.class);
+
+
+        Response response = restTemplate.getForObject(apiUrl, Response.class);
+
+        if (response != null) {
+
+            if (response.getVelocity() != null) {
+
+                try {
+                    double velocity = Double.parseDouble(response.getVelocity().toString());
+                    response.setVelocity(velocity);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid velocity format in response: " + response.getVelocity());
+                }
+            }
+        }
+
+        return response;
     }
 }
