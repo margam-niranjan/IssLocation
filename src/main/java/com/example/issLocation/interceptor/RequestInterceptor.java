@@ -1,11 +1,10 @@
 package com.example.issLocation.interceptor;
 
 import com.example.issLocation.service.AccessCountService;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class RequestInterceptor implements HandlerInterceptor {
@@ -22,7 +21,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         if (request.getRequestURI().equals("/iss")) {
             accessCountService.incrementAccessCount();
         }
-        return true; // Continue with the request
+        return true;
     }
 }
 
