@@ -56,4 +56,6 @@ public class UserInfo {
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
     }
+
+
 }
