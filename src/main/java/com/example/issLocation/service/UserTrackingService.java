@@ -32,4 +32,7 @@ public class UserTrackingService {
     public List<UserInfo> getUsers() {
         return users;
     }
+    public void reset() {
+        users.clear();
+    }
 }

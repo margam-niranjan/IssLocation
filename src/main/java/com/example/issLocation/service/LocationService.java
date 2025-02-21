@@ -24,7 +24,7 @@ public class LocationService {
             if (response.getVelocity() != null) {
 
                 try {
-                    double velocity = Double.parseDouble(response.getVelocity().toString());
+                    String velocity = response.getVelocity().toString();
                     response.setVelocity(velocity);
                 } catch (NumberFormatException e) {
                     System.err.println("Invalid velocity format in response: " + response.getVelocity());
