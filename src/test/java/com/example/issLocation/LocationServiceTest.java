@@ -17,29 +17,22 @@ class LocationServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Mock the RestTemplate
         restTemplate = mock(RestTemplate.class);
 
-        // Mock the response from RestTemplate's getForObject method
         Response mockedResponse = new Response();
         mockedResponse.setVelocity("27500.0");
 
-        // Configure the mock to return the mocked response
         when(restTemplate.getForObject(anyString(), eq(Response.class))).thenReturn(mockedResponse);
 
-        // Initialize LocationService with the mocked RestTemplate
         locationService = new LocationService(restTemplate);
     }
 
     @Test
     void testGetIssLocation_ValidResponse() {
-        // Call the method to test
         Response response = locationService.getIssLocation();
 
-        // Assert that the response is not null
         assertNotNull(response);
 
-        // Assert that the velocity in the response is the expected value (as String)
         assertEquals("27500.0", response.getVelocity()); // Compare as String
     }
 
