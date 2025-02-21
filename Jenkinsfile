@@ -25,7 +25,7 @@ pipeline {
                 script {
                     sshagent(['your-ssh-credential-id']) {
                         sh '''
-                        scp target/issLocation-0.0.1-SNAPSHOT.jar ubuntu@your-ec2-public-ip:/home/ubuntu/project/
+                        scp target/issLocation-0.0.1-SNAPSHOT.jar ubuntu@51.20.96.248:/home/ubuntu/project/
                         ssh ubuntu@51.20.96.248 << EOF
                         sudo systemctl stop my-spring-boot-app
                         sudo mv /home/ubuntu/project/issLocation-0.0.1-SNAPSHOT.jar /home/ubuntu/project/app.jar
