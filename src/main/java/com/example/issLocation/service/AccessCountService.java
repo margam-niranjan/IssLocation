@@ -25,8 +25,6 @@ public class AccessCountService {
 
         System.out.println("Active Users Count (Decremented): " + (current - 1));  // Debugging
     }
-
-
     public int getAccessCount() {
         return activeUserCount.get();
     }
