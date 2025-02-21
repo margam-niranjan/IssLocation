@@ -17,7 +17,6 @@ public class LocationService {
     public Response getIssLocation() {
         String apiUrl = "https://api.wheretheiss.at/v1/satellites/25544";
 
-
         Response response = restTemplate.getForObject(apiUrl, Response.class);
 
         if (response != null) {
@@ -32,7 +31,6 @@ public class LocationService {
                 }
             }
         }
-
         return response;
     }
 }
