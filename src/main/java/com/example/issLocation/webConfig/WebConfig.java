@@ -7,7 +7,12 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.HandlerInterceptor;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -18,9 +23,6 @@ public class WebConfig implements WebMvcConfigurer {
         this.accessCountService = accessCountService;
     }
 
-    public ServletListenerRegistrationBean<SessionListener> sessionListener() {
-        return new ServletListenerRegistrationBean<>(new SessionListener(accessCountService));
-    }
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -29,5 +31,20 @@ public class WebConfig implements WebMvcConfigurer {
                 registry.addMapping("/user-info").allowedOrigins("*"); // Allow all origins
             }
         };
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new HandlerInterceptor() {
+            @Override
+            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+                String path = request.getRequestURI();
+                if (!path.equals("/iss") && !path.equals("/user-info")) {
+                    response.sendRedirect("/iss");
+                    return false;
+                }
+                return true;
+            }
+        });
     }
 }

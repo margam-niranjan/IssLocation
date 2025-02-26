@@ -22,7 +22,7 @@ public class UserInfoController {
     public String getUsers(Model model) {
         List<UserInfo> users = trackingService.getUsers();
         model.addAttribute("users", users);
-        model.addAttribute("userCount", users.size()); // ✅ Add user count
-        return "user-info"; // ✅ Returns `user-info.html`
+        model.addAttribute("userCount", users.size());
+        return "user-info";
     }
 }
