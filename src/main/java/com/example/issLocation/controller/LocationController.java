@@ -6,11 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
+@CrossOrigin(origins = "*")
 @Controller
 public class LocationController {
     private final LocationService locationService;

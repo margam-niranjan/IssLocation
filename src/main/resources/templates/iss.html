@@ -6,14 +6,12 @@
     <title>Live ISS Tracker</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <style>
-        /* General reset for margin and padding */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
         }
 
-        /* Styling for the navigation bar */
         nav {
             background-color: #333;
             padding: 10px 20px;
@@ -22,54 +20,17 @@
             text-align: center;
         }
 
-        /* Map container styling */
         #map {
-            width: 100%;  /* Full width */
-            height: 100vh;  /* Full screen height */
-        }
-
-        /* Media queries for responsiveness */
-        @media (max-width: 1200px) {
-            #map {
-                height: 75vh; /* Adjust map height for medium screens */
-            }
-        }
-
-        @media (max-width: 1024px) {
-            #map {
-                height: 70vh; /* Slightly smaller height for tablets */
-            }
+            width: 100%;
+            height: 100vh;
         }
 
         @media (max-width: 768px) {
             #map {
-                height: 60vh; /* Reduce map height for small tablets */
+                height: 60vh;
             }
         }
 
-        @media (max-width: 600px) {
-            #map {
-                height: 55vh; /* Reduce map height for mobile devices */
-            }
-        }
-
-        @media (max-width: 480px) {
-            #map {
-                height: 50vh; /* Further reduce map height for small phones */
-            }
-        }
-
-        /* Optional: Add styling for the title */
-        h1 {
-            font-size: 1.5rem;
-            text-align: center;
-            padding: 20px 0;
-            margin: 0;
-            background-color: #f8f9fa;
-            box-shadow: 0 4px 2px -2px gray;
-        }
-
-        /* Styling for the information layer at the top-right */
         .info {
             background-color: rgba(255, 255, 255, 0.7);
             padding: 10px;
@@ -78,7 +39,7 @@
             font-family: Arial, sans-serif;
             font-size: 1rem;
             position: absolute;
-            top: 60px;  /* Below the nav bar */
+            top: 60px;
             right: 10px;
             z-index: 1000;
         }
@@ -88,7 +49,7 @@
 <nav>
     <span>Live ISS Tracker</span>
 </nav>
-<h1>Live ISS Tracker</h1>
+<h1 style="text-align: center; padding: 10px;">Live ISS Tracker</h1>
 <div id="map"></div>
 <div id="iss-info" class="info">
     <strong>Latitude:</strong> <span id="latitude">0.0</span><br>
@@ -97,58 +58,49 @@
 </div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    // Initialize the map centered at (0, 0)
     var map = L.map('map').setView([0, 0], 3);
 
-    // Load OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Custom ISS icon
     var issIcon = L.icon({
         iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg',
-        iconSize: [50, 50], // Icon size
-        iconAnchor: [25, 25] // Center the icon
+        iconSize: [50, 50],
+        iconAnchor: [25, 25]
     });
 
-    // Add ISS marker initially at [0, 0]
     var marker = L.marker([0, 0], { icon: issIcon }).addTo(map)
         .bindPopup('International Space Station')
         .openPopup();
 
-    // Function to update ISS location and velocity
     function updateLocation(lat, lon, velocity) {
-        console.log(`Updating location: Latitude: ${lat}, Longitude: ${lon}, Velocity: ${velocity} km/h`); // Debug log
-        marker.setLatLng([lat, lon]); // Move marker smoothly
+        console.log(`Updating location: Latitude: ${lat}, Longitude: ${lon}, Velocity: ${velocity} km/h`);
+        marker.setLatLng([lat, lon]);
         map.flyTo([lat, lon], map.getZoom(), {
             animate: true,
-            duration: 1.5 // Smooth transition
+            duration: 1.5
         });
 
-        // Update the info display
         document.getElementById('latitude').textContent = lat.toFixed(6);
         document.getElementById('longitude').textContent = lon.toFixed(6);
         document.getElementById('velocity').textContent = velocity.toFixed(1) + ' km/h';
     }
 
-    // Function to fetch ISS location and velocity using Open Notify API
     function fetchISSLocation() {
-        fetch('http://api.open-notify.org/iss-now.json')
+        fetch('https://api.wheretheiss.at/v1/satellites/25544')
             .then(response => response.json())
             .then(data => {
-                const lat = parseFloat(data.iss_position.latitude);
-                const lon = parseFloat(data.iss_position.longitude);
-                // Simulate velocity (ISS travels at roughly 28,000 km/h)
-                const velocity = 28000;
-                updateLocation(lat, lon, velocity); // Update marker position and velocity
+                const lat = parseFloat(data.latitude);
+                const lon = parseFloat(data.longitude);
+                const velocity = parseFloat(data.velocity);
+                updateLocation(lat, lon, velocity);
             })
             .catch(error => console.error("Error fetching ISS location:", error));
     }
 
-    // Fetch location immediately on page load
     fetchISSLocation();
-    setInterval(fetchISSLocation, 3000);  // Update every 3 seconds
+    setInterval(fetchISSLocation, 3000);
 </script>
 </body>
 </html>
