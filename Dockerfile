@@ -1,14 +1,26 @@
-# Use Java 21 JDK as the base image
-FROM openjdk:21-jdk-slim
+# Use a Maven image to build the project
+FROM maven:3.9.6-eclipse-temurin-21 as build
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy the JAR file into the container
-COPY target/issLocation-0.0.1-SNAPSHOT.jar app.jar
+# Copy project files
+COPY . .
 
-# Expose the port Spring Boot runs on
+# Build the Spring Boot application
+RUN chmod +x ./mvnw && ./mvnw clean package -DskipTests
+
+# Use a lightweight JDK image for running the app
+FROM openjdk:21-jdk-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose port 8080
 EXPOSE 8080
 
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application
+CMD ["java", "-jar", "app.jar"]
