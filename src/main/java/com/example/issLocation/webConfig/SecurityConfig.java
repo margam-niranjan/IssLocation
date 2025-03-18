@@ -11,15 +11,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for API access
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/iss").permitAll()  // Allow public access to /iss
-                        .requestMatchers("/user-info").authenticated() // Require login for /user-info
-                        .anyRequest().permitAll() // Allow all requests (we'll handle redirects separately)
+                        .requestMatchers("/user-info").authenticated() // Require authentication for /user-info
+                        .anyRequest().permitAll() // Allow all other requests
                 )
-                .formLogin()
-                .defaultSuccessUrl("/user-info", true) // Redirect to /user-info after login
-                .and()
-                .logout();
+                .formLogin(login -> login
+                        .defaultSuccessUrl("/user-info", true) // Redirect to /user-info after login
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // Define logout endpoint
+                        .logoutSuccessUrl("/iss") // Redirect to /iss after logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                );
 
         return http.build();
     }

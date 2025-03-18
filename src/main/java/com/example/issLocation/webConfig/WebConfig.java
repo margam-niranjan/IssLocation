@@ -28,7 +28,10 @@ public class WebConfig implements WebMvcConfigurer {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/user-info").allowedOrigins("*"); // Allow all origins
+                registry.addMapping("/user-info")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedHeaders("*");
             }
         };
     }
@@ -39,12 +42,19 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 String path = request.getRequestURI();
-                if (!path.equals("/iss") && !path.equals("/user-info")) {
+
+                // Exclude /robots.txt from redirection
+                if (!path.startsWith("/iss") && !path.startsWith("/user-info") && !path.equals("/robots.txt")) {
                     response.sendRedirect("/iss");
                     return false;
                 }
                 return true;
             }
         });
+    }
+
+    @Bean
+    public ServletListenerRegistrationBean<SessionListener> sessionListener(AccessCountService accessCountService) {
+        return new ServletListenerRegistrationBean<>(new SessionListener(accessCountService));
     }
 }
