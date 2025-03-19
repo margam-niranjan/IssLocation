@@ -3,32 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live ISS Tracker</title>
+    <title>Live ISS Tracker - Real-Time Space Station Location</title>
 
     <!-- SEO Optimization -->
-    <meta name="description" content="Track the real-time location of the International Space Station (ISS) with live updates, coordinates, and orbital details.">
-    <meta name="keywords" content="ISS tracker, live ISS location, satellite tracking, real-time ISS, NASA ISS tracker">
+    <meta name="description" content="Track the real-time location of the International Space Station (ISS). View live ISS updates, position, and orbital path on an interactive map.">
+    <meta name="keywords" content="Live ISS Tracker, ISS real-time location, track ISS, ISS map, ISS tracking website,
+    ISS orbit tracking, satellite position tracker, NASA ISS location, real-time satellite map, ISS live feed">
     <meta name="author" content="Niranjan">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Twitter Cards -->
+    <!-- Open Graph / Twitter Cards for better social sharing -->
     <meta property="og:title" content="Live ISS Location Tracker - Real-Time Space Station Position">
-    <meta property="og:description" content="View the real-time position of the International Space Station (ISS).">
+    <meta property="og:description" content="View the real-time position of the International Space Station (ISS) on an interactive map.">
     <meta property="og:url" content="https://isslocation.up.railway.app/iss">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://isslocation.up.railway.app/images/iss.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Live ISS Tracker - Real-Time Space Station Position">
-    <meta name="twitter:description" content="Track the ISS in real-time, view its current location.">
+    <meta name="twitter:description" content="Track the ISS in real-time and explore its current location.">
     <meta name="twitter:image" content="https://isslocation.up.railway.app/images/iss.png">
 
-    <!-- Preload Important Resources -->
-    <link rel="preload" as="image" href="/images/iss.png">
+    <!-- Performance Optimizations -->
     <link rel="preload" as="image" href="https://tile.openstreetmap.org/3/1/1.png">
+    <link rel="preload" as="image" href="/images/iss.png">
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-
+    <!-- Inline Critical Leaflet CSS -->
     <style>
         body, html {
             margin: 0;
@@ -53,9 +52,8 @@
         #map {
             width: 100%;
             height: 100vh;
-        }
-        @media (max-width: 768px) {
-            #map { height: 60vh; }
+            background-image: url('https://tile.openstreetmap.org/3/1/1.png'); /* Fallback for better LCP */
+            background-size: cover;
         }
         .info {
             background-color: rgba(0, 0, 0, 0.8);
@@ -76,8 +74,18 @@
                 top: 10px;
                 right: 5px;
             }
+            #map {
+                height: 60vh;
+            }
         }
     </style>
+
+    <!-- Load Leaflet CSS without blocking render -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" media="print" onload="this.onload=null;this.removeAttribute('media');">
+
+    <!-- Load Leaflet JS asynchronously -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer async></script>
+
 </head>
 <body>
 
@@ -95,9 +103,7 @@
     <strong>Velocity:</strong> <span id="velocity">0.0 km/h</span>
 </div>
 
-<!-- Leaflet JS -->
-<script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+<!-- Optimized JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var map = L.map('map').setView([0, 0], 3);
@@ -151,7 +157,7 @@
                 });
         }
 
-        // Optimize Performance: Update every 5s instead of 3s
+        // Update ISS location every 5 seconds
         fetchISSLocation();
         setInterval(fetchISSLocation, 5000);
 
