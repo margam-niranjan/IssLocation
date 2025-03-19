@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Track the real-time location of the International Space Station (ISS) with live updates, coordinates, and orbital details. Stay informed about ISS passes over your location.,The current position of the ISS and its ground track.">
-    <meta name="keywords" content="position,ISS,International Space Station,current position,ground track,ISS tracker,ISS tracker, live ISS location, International Space Station tracking, satellite position, ISS live map, real-time ISS tracking, space station coordinates, orbital tracking, where is the ISS now, ISS overhead passes, live space station updates, satellite tracking, NASA ISS tracker, live space map, astronomy tracking">
-    <meta name="author" content="Niranjan">
-    <meta name="robots" content="index, follow">
-
-    <meta property="og:title" content="Live ISS Location Tracker - Real-Time Space Station Position">
-    <meta property="og:description" content="View the real-time position of the International Space Station (ISS), track its live coordinates, and see upcoming passes over your location.">
-    <meta property="og:url" content="https://isslocation-production.up.railway.app/iss">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://yourdomain.com/iss-preview.jpg">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Live ISS Tracker - Real-Time Space Station Position">
-    <meta name="twitter:description" content="Track the ISS in real-time, view its current location, and check when it will pass over your city.">
-    <meta name="twitter:image" content="https://yourdomain.com/iss-preview.jpg">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live ISS Tracker</title>
+
+    <!-- SEO Optimization -->
+    <meta name="description" content="Track the real-time location of the International Space Station (ISS) with live updates, coordinates, and orbital details.">
+    <meta name="keywords" content="ISS tracker, live ISS location, satellite tracking, real-time ISS, NASA ISS tracker">
+    <meta name="author" content="Niranjan">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Twitter Cards -->
+    <meta property="og:title" content="Live ISS Location Tracker - Real-Time Space Station Position">
+    <meta property="og:description" content="View the real-time position of the International Space Station (ISS).">
+    <meta property="og:url" content="https://isslocation-production.up.railway.app/iss">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://yourdomain.com/iss-preview.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Live ISS Tracker - Real-Time Space Station Position">
+    <meta name="twitter:description" content="Track the ISS in real-time, view its current location.">
+    <meta name="twitter:image" content="https://yourdomain.com/iss-preview.jpg">
+
+    <!-- Preload Important Resources -->
+    <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg">
+    <link rel="preload" as="image" href="https://tile.openstreetmap.org/3/1/1.png">
+
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4; /* Light gray for good contrast */
-            color: #111; /* Ensures readability */
+            background-color: #f4f4f4;
+            color: #111;
         }
-
         nav {
-            background-color: #222; /* Darker navbar for better contrast */
+            background-color: #222;
             padding: 10px 20px;
             color: white;
             font-size: 1.2rem;
             text-align: center;
         }
-
         h1 {
             text-align: center;
             padding: 10px;
-            color: #222; /* Dark text for contrast */
+            color: #222;
         }
-
         #map {
             width: 100%;
             height: 100vh;
         }
-
         @media (max-width: 768px) {
-            #map {
-                height: 60vh;
-            }
+            #map { height: 60vh; }
         }
-
         .info {
-            background-color: rgba(0, 0, 0, 0.8); /* Darker background for contrast */
-            color: white; /* Ensures readability */
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
             padding: 15px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -86,51 +87,66 @@
     <strong>Velocity:</strong> <span id="velocity">0.0 km/h</span>
 </div>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Leaflet JS -->
+<script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <script>
-    var map = L.map('map').setView([0, 0], 3);
+    document.addEventListener("DOMContentLoaded", function () {
+        var map = L.map('map').setView([0, 0], 3);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+        // Load Map Tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-    var issIcon = L.icon({
-        iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg',
-        iconSize: [50, 50],
-        iconAnchor: [25, 25]
-    });
-
-    var marker = L.marker([0, 0], { icon: issIcon }).addTo(map)
-        .bindPopup('International Space Station')
-        .openPopup();
-
-    function updateLocation(lat, lon, velocity) {
-        console.log(`Updating location: Latitude: ${lat}, Longitude: ${lon}, Velocity: ${velocity} km/h`);
-        marker.setLatLng([lat, lon]);
-        map.flyTo([lat, lon], map.getZoom(), {
-            animate: true,
-            duration: 1.5
+        // ISS Icon
+        var issIcon = L.icon({
+            iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg',
+            iconSize: [50, 50],
+            iconAnchor: [25, 25]
         });
 
-        document.getElementById('latitude').textContent = lat.toFixed(6);
-        document.getElementById('longitude').textContent = lon.toFixed(6);
-        document.getElementById('velocity').textContent = velocity.toFixed(1) + ' km/h';
-    }
+        // Add ISS Marker
+        var marker = L.marker([0, 0], { icon: issIcon }).addTo(map)
+            .bindPopup('International Space Station')
+            .openPopup();
 
-    function fetchISSLocation() {
-        fetch('https://api.wheretheiss.at/v1/satellites/25544')
-            .then(response => response.json())
-            .then(data => {
-                const lat = parseFloat(data.latitude);
-                const lon = parseFloat(data.longitude);
-                const velocity = parseFloat(data.velocity);
-                updateLocation(lat, lon, velocity);
-            })
-            .catch(error => console.error("Error fetching ISS location:", error));
-    }
+        function updateLocation(lat, lon, velocity) {
+            console.log(`Updating location: Latitude: ${lat}, Longitude: ${lon}, Velocity: ${velocity} km/h`);
+            marker.setLatLng([lat, lon]);
 
-    fetchISSLocation();
-    setInterval(fetchISSLocation, 3000);
+            // Smooth map movement
+            map.flyTo([lat, lon], map.getZoom(), {
+                animate: true,
+                duration: 1.5
+            });
+
+            document.getElementById('latitude').textContent = lat.toFixed(6);
+            document.getElementById('longitude').textContent = lon.toFixed(6);
+            document.getElementById('velocity').textContent = velocity.toFixed(1) + ' km/h';
+        }
+
+        function fetchISSLocation() {
+            fetch('https://api.wheretheiss.at/v1/satellites/25544')
+                .then(response => response.json())
+                .then(data => {
+                    const lat = parseFloat(data.latitude);
+                    const lon = parseFloat(data.longitude);
+                    const velocity = parseFloat(data.velocity);
+                    updateLocation(lat, lon, velocity);
+                })
+                .catch(error => console.error("Error fetching ISS location:", error));
+        }
+
+        // Optimize Performance: Update every 5s instead of 3s
+        fetchISSLocation();
+        setInterval(fetchISSLocation, 5000);
+
+        // Improve Map Rendering Performance
+        map.on('moveend', function () {
+            setTimeout(() => { map.invalidateSize(); }, 500);
+        });
+    });
 </script>
 
 </body>
