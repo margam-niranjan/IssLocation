@@ -1,14 +1,21 @@
-# Use a Maven image to build the project
-FROM maven:3.9.6-eclipse-temurin-21 as build
+# Use Maven image to build the project
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy only the pom.xml and dependencies first (for better caching)
+COPY pom.xml ./
+RUN mvn dependency:go-offline -B
+
+# Copy the entire project
 COPY . .
 
+# Ensure Maven Wrapper (mvnw) has correct permissions
+RUN chmod +x mvnw
+
 # Build the Spring Boot application
-RUN chmod +x ./mvnw && ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
 
 # Use a lightweight JDK image for running the app
 FROM openjdk:21-jdk-slim
