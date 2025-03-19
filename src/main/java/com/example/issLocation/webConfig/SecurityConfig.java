@@ -14,8 +14,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for API access
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/iss").permitAll()  // Allow public access to /iss
-                        .requestMatchers("/user-info").authenticated() // Require authentication for /user-info
-                        .anyRequest().permitAll() // Allow all other requests
+                        .requestMatchers("/user-info").permitAll() // Now accessible without authentication
+                        .requestMatchers("/images/iss.png").permitAll() // Allow direct image access
+                        .anyRequest().authenticated() // Other requests require authentication
                 )
                 .formLogin(login -> login
                         .defaultSuccessUrl("/user-info", true) // Redirect to /user-info after login

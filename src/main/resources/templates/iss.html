@@ -14,16 +14,16 @@
     <!-- Open Graph / Twitter Cards -->
     <meta property="og:title" content="Live ISS Location Tracker - Real-Time Space Station Position">
     <meta property="og:description" content="View the real-time position of the International Space Station (ISS).">
-    <meta property="og:url" content="https://isslocation-production.up.railway.app/iss">
+    <meta property="og:url" content="https://isslocation.up.railway.app/iss">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://yourdomain.com/iss-preview.jpg">
+    <meta property="og:image" content="https://isslocation.up.railway.app/images/iss.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Live ISS Tracker - Real-Time Space Station Position">
     <meta name="twitter:description" content="Track the ISS in real-time, view its current location.">
-    <meta name="twitter:image" content="https://yourdomain.com/iss-preview.jpg">
+    <meta name="twitter:image" content="https://isslocation.up.railway.app/images/iss.png">
 
     <!-- Preload Important Resources -->
-    <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg">
+    <link rel="preload" as="image" href="/images/iss.png">
     <link rel="preload" as="image" href="https://tile.openstreetmap.org/3/1/1.png">
 
     <!-- Leaflet CSS -->
@@ -69,6 +69,14 @@
             right: 10px;
             z-index: 1000;
         }
+        @media (max-width: 768px) {
+            .info {
+                font-size: 0.8rem;
+                padding: 10px;
+                top: 10px;
+                right: 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -101,7 +109,7 @@
 
         // ISS Icon
         var issIcon = L.icon({
-            iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg',
+            iconUrl: '/images/iss.png',
             iconSize: [50, 50],
             iconAnchor: [25, 25]
         });
@@ -135,7 +143,12 @@
                     const velocity = parseFloat(data.velocity);
                     updateLocation(lat, lon, velocity);
                 })
-                .catch(error => console.error("Error fetching ISS location:", error));
+                .catch(error => {
+                    console.error("Error fetching ISS location:", error);
+                    document.getElementById('latitude').textContent = "N/A";
+                    document.getElementById('longitude').textContent = "N/A";
+                    document.getElementById('velocity').textContent = "N/A";
+                });
         }
 
         // Optimize Performance: Update every 5s instead of 3s

@@ -1,10 +1,10 @@
 package com.example.issLocation.listener;
 
 import com.example.issLocation.service.AccessCountService;
-import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SessionListener implements HttpSessionListener {
@@ -18,13 +18,13 @@ public class SessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        System.out.println("Session Created. Incrementing count.");
         accessCountService.incrementAccessCount();  // Increment user count
+        System.out.println("[SESSION CREATED] Active Users: " + accessCountService.getCurrentAccessCount());
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        System.out.println("Session Destroyed. Decrementing count.");
         accessCountService.decrementAccessCount();  // Decrement user count
+        System.out.println("[SESSION DESTROYED] Active Users: " + accessCountService.getCurrentAccessCount());
     }
 }
