@@ -1,8 +1,10 @@
 package com.example.issLocation;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.example.issLocation.service.AccessCountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AccessCountServiceTest {
 
@@ -14,45 +16,33 @@ public class AccessCountServiceTest {
     }
 
     @Test
+    void testInitialAccessCountIsZero() {
+        assertEquals(0, accessCountService.getCurrentAccessCount());
+    }
+
+    @Test
     void testIncrementAccessCount() {
-        assertEquals(0, accessCountService.getAccessCount());
+        accessCountService.incrementAccessCount();
+        assertEquals(1, accessCountService.getCurrentAccessCount());
 
         accessCountService.incrementAccessCount();
-        assertEquals(1, accessCountService.getAccessCount());
-
-        accessCountService.incrementAccessCount();
-        assertEquals(2, accessCountService.getAccessCount());
+        assertEquals(2, accessCountService.getCurrentAccessCount());
     }
 
     @Test
     void testDecrementAccessCount() {
         accessCountService.incrementAccessCount();
         accessCountService.incrementAccessCount();
-        assertEquals(2, accessCountService.getAccessCount());
+        assertEquals(2, accessCountService.getCurrentAccessCount());
 
         accessCountService.decrementAccessCount();
-        assertEquals(1, accessCountService.getAccessCount());
+        assertEquals(1, accessCountService.getCurrentAccessCount());
 
         accessCountService.decrementAccessCount();
-        assertEquals(0, accessCountService.getAccessCount());
-    }
+        assertEquals(0, accessCountService.getCurrentAccessCount());
 
-    @Test
-    void testDecrementAccessCount_BelowZero() {
-        assertEquals(0, accessCountService.getAccessCount());
-
+        // Ensure count does not go negative
         accessCountService.decrementAccessCount();
-        assertEquals(0, accessCountService.getAccessCount());
-    }
-
-    @Test
-    void testGetAccessCount() {
-        assertEquals(0, accessCountService.getAccessCount());
-
-        accessCountService.incrementAccessCount();
-        assertEquals(1, accessCountService.getAccessCount());
-
-        accessCountService.decrementAccessCount();
-        assertEquals(0, accessCountService.getAccessCount());
+        assertEquals(0, accessCountService.getCurrentAccessCount());
     }
 }
