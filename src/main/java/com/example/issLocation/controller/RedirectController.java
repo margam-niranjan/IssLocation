@@ -12,7 +12,7 @@ public class RedirectController {
         return "redirect:/iss";
     }
 
-    @RequestMapping(value = "/{path:^(?!user-info$).*$}")
+    @RequestMapping(value = "/{path:[^\\.]*}")  // Ensures unknown paths redirect
     public String redirectUnknownPaths() {
         return "redirect:/iss";
     }
