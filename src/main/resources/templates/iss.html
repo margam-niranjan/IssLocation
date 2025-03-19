@@ -12,7 +12,7 @@
     <meta name="author" content="Niranjan">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Twitter Cards for better social sharing -->
+    <!-- Open Graph / Twitter Cards -->
     <meta property="og:title" content="Live ISS Location Tracker - Real-Time Space Station Position">
     <meta property="og:description" content="View the real-time position of the International Space Station (ISS) on an interactive map.">
     <meta property="og:url" content="https://isslocation.up.railway.app/iss">
@@ -23,11 +23,10 @@
     <meta name="twitter:description" content="Track the ISS in real-time and explore its current location.">
     <meta name="twitter:image" content="https://isslocation.up.railway.app/images/iss.png">
 
-    <!-- Performance Optimizations -->
-    <link rel="preload" as="image" href="https://tile.openstreetmap.org/3/1/1.png">
-    <link rel="preload" as="image" href="/images/iss.png">
+    <!-- Load Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-    <!-- Inline Critical Leaflet CSS -->
+    <!-- Inline Critical CSS -->
     <style>
         body, html {
             margin: 0;
@@ -79,13 +78,6 @@
             }
         }
     </style>
-
-    <!-- Load Leaflet CSS without blocking render -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" media="print" onload="this.onload=null;this.removeAttribute('media');">
-
-    <!-- Load Leaflet JS asynchronously -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer async></script>
-
 </head>
 <body>
 
@@ -103,9 +95,19 @@
     <strong>Velocity:</strong> <span id="velocity">0.0 km/h</span>
 </div>
 
-<!-- Optimized JavaScript -->
+<!-- Load Leaflet JS (defer ensures it loads before your script runs) -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js" defer></script>
+
+<!-- JavaScript Code -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Ensure Leaflet is loaded before running
+        if (typeof L === 'undefined') {
+            console.error("Leaflet.js failed to load.");
+            return;
+        }
+
+        // Initialize Map
         var map = L.map('map').setView([0, 0], 3);
 
         // Load Map Tiles
